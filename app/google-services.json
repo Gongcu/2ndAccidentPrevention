@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "633214932608",
+    "firebase_url": "https://ndaccidentprevention.firebaseio.com",
+    "project_id": "ndaccidentprevention",
+    "storage_bucket": "ndaccidentprevention.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:633214932608:android:52bca16dc8ab471cb23865",
+        "android_client_info": {
+          "package_name": "com.example.a2ndaccidentprevention"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "633214932608-55jlq0pbktg602ei1h6a464cpo60i60p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.a2ndaccidentprevention",
+            "certificate_hash": "9e175c5bce71b4b11b7761d31095b4a7567d67b2"
+          }
+        },
+        {
+          "client_id": "633214932608-a09qmg08a7t5ue988hl91nmdljdhioil.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCy_nO-MaHezSp6oxJeBnfhm67-S8wGzhM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "633214932608-a09qmg08a7t5ue988hl91nmdljdhioil.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
