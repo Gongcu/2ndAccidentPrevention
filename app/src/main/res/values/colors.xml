@@ -7,5 +7,6 @@
     <color name="lightGray">#C4FFFAFA</color>
     <color name="white">#FFFFFF</color>
     <color name="blue">#F32186F3</color>
+    <color name="black">#F3000000</color>
     <color name="blue_clicked">#429AF3</color>
 </resources>

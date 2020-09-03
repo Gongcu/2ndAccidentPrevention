@@ -1,9 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/main_layout"
     tools:context=".SignupActivity">
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="1dp"
+        android:orientation="vertical"
+        android:paddingBottom="1dp"
+        app:layout_constraintTop_toTopOf="parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:layout_width="27dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/logo" />
+    </LinearLayout>
+
+
+    <EditText
+        android:id="@+id/emailEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_white_view"
+        android:padding="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:visibility="visible"
+        android:fontFamily="@font/basic_font"
+        android:hint="이메일 입력"/>
+    <EditText
+        android:id="@+id/pwEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:background="@drawable/rounded_white_view"
+        android:padding="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:fontFamily="@font/basic_font"
+        android:hint="비밀번호 입력"/>
+    <EditText
+        android:id="@+id/pwCheckEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:background="@drawable/rounded_white_view"
+        android:padding="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:fontFamily="@font/basic_font"
+        android:hint="비밀번호 다시 입력"/>
+    <TextView
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center"
+        android:fontFamily="@font/basic_font"
+        android:text="비밀번호는 영문, 숫자, 특수문자 조합으로 9~15자리"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:layout_gravity="center"
+        android:id="@+id/signUpBtn"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/basic_font"
+        android:text="회원가입"
+        android:background="@drawable/rounded_blue_view"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:textColor="@color/snow" />
+    <Button
+        android:background="@color/snow"
+        android:layout_gravity="center"
+        android:id="@+id/gotoLoginBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/basic_font"
+        android:text="로그인"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="103dp" />
+
+
+</LinearLayout>
