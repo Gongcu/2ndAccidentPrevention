@@ -3,7 +3,7 @@ package com.example.a2ndaccidentprevention
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
-import com.example.a2ndaccidentprevention.retrofit.Location
+import com.example.a2ndaccidentprevention.retrofit.LocationInfo
 import com.example.a2ndaccidentprevention.retrofit.LocationService
 import com.example.a2ndaccidentprevention.retrofit.RetrofitAPI
 import com.example.a2ndaccidentprevention.room.Alert
@@ -12,7 +12,6 @@ import com.google.firebase.auth.FirebaseAuth
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
 import java.util.*
 
 class Repository(application: Application) {
@@ -33,18 +32,11 @@ class Repository(application: Application) {
     fun insert(alert: Alert){
         alertDao.insert(alert)
     }
-    fun postLocation(location: Location){
-        api.postLocation(location).enqueue(object: Callback<Void>{
-            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                Log.d("onResponse",response.toString())
-            }
-            override fun onFailure(call: Call<Void>, t: Throwable) {
-                Log.e("onFailure",t.toString())
-            }
-        });
+    fun postLocation(locationInfo: LocationInfo){
+        api.postLocation(locationInfo)
     }
-    fun notifyAccident(locationList: Queue<Location>){
-        api.notifyAccident(locationList).enqueue(object: Callback<Void>{
+    fun notifyAccident(locationInfoList: Queue<LocationInfo>){
+        api.notifyAccident(locationInfoList).enqueue(object: Callback<Void>{
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 Log.d("onResponse",response.toString())
             }
@@ -56,7 +48,7 @@ class Repository(application: Application) {
     fun deleteLocation(token: String){
         api.deleteLocation(token)
     }
-    fun getAuth():FirebaseAuth{
+    fun getAuth():FirebaseAuth{bg
         return auth
     }
     fun getUid():String?{

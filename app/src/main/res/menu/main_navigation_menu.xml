@@ -5,14 +5,14 @@
         <item
             android:id ="@+id/sound_alert_item"
             android:icon="@drawable/ic_notifications"
-            app:actionLayout="@layout/layout_switch"
+            app:actionLayout="@layout/layout_switch_sound"
             android:checkable="false"
             android:title="소리 알림"
             />
         <item
             android:id ="@+id/vibration_alert_item"
             android:icon="@drawable/ic_vibration"
-            app:actionLayout="@layout/layout_switch"
+            app:actionLayout="@layout/layout_switch_sound"
             android:checkable="false"
             android:title="진동 알림"
             />

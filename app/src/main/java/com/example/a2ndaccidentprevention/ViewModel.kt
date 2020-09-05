@@ -1,14 +1,10 @@
 package com.example.a2ndaccidentprevention
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import com.example.a2ndaccidentprevention.retrofit.Location
+import com.example.a2ndaccidentprevention.retrofit.LocationInfo
 import com.example.a2ndaccidentprevention.room.Alert
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.util.*
 
 class ViewModel(application: Application) : AndroidViewModel(application) {
@@ -26,11 +22,11 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         repository.insert(alert)
     }
 
-    fun postLocation(location: Location){
-        repository.postLocation(location)
+    fun postLocation(locationInfo: LocationInfo){
+        repository.postLocation(locationInfo)
     }
-    fun notifyAccident(locationList: Queue<Location>){
-        repository.notifyAccident(locationList)
+    fun notifyAccident(locationInfoList: Queue<LocationInfo>){
+        repository.notifyAccident(locationInfoList)
     }
     fun deleteLocation(token: String){
         repository.deleteLocation(token)

@@ -1,33 +1,61 @@
 package com.example.a2ndaccidentprevention
 
+import android.content.Context
 import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+import android.location.Location
+import android.media.AudioManager
 import android.os.Bundle
+import android.os.Vibrator
+import android.util.Log
+import android.view.Gravity
+import android.widget.CompoundButton
+import android.widget.Switch
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
+import com.example.a2ndaccidentprevention.retrofit.LocationInfo
+import com.example.a2ndaccidentprevention.room.Alert
 import com.example.a2ndaccidentprevention.util.PermissionUtil
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.layout_switch_sound.*
+import kotlinx.android.synthetic.main.layout_switch_vibrator.*
+import kotlinx.android.synthetic.main.layout_switch_vibrator.view.*
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
+import java.util.*
 import kotlin.math.pow
 import kotlin.math.sqrt
 
 
 class MainActivity : AppCompatActivity(), MapView.CurrentLocationEventListener, SensorEventListener {
+    private var isFirst = true
     private lateinit var auth: FirebaseAuth
-    private lateinit var token: String
+    private  var token: String = ""
     private lateinit var uid: String
     val viewModel: ViewModel by viewModels()
 
-    //private val sensorManager=getSystemService(Context.SENSOR_SERVICE) as SensorManager
-    //private val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+    private lateinit var sensorManager : SensorManager
+    private lateinit var accelerometer : Sensor
+    private lateinit var vibrator: Vibrator
+    private lateinit var audioManager: AudioManager
+
     private val gravity = FloatArray(3)
     private var total:Double = 0.0
 
     private lateinit var permissionUtil: PermissionUtil
+
+    private var queue :Queue<LocationInfo> = LinkedList()
+
+    private val currLocation = Location("currLocation")
+    private val prevLocation = Location("prevLocation")
+    private var currentBearing = 0.0f
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,15 +64,24 @@ class MainActivity : AppCompatActivity(), MapView.CurrentLocationEventListener, 
         permissionUtil= PermissionUtil(applicationContext)
         permissionUtil.requestPermission()
 
+        vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator;
+        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        sensorManager=getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+
         auth = FirebaseAuth.getInstance()
         token = intent.getStringExtra("token").toString()
         uid = intent.getStringExtra("uid").toString()
 
+        Log.e("token",token)
 
+        mapViewInit(map_view)
 
         navigationView.setNavigationItemSelectedListener {
             if (it.itemId == R.id.logout_item) {
                 auth.signOut()
+                removeToken()
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
@@ -52,30 +89,73 @@ class MainActivity : AppCompatActivity(), MapView.CurrentLocationEventListener, 
             }
             false
         }
+        settingBtn.setOnClickListener {
+            if (!drawerLayout.isDrawerOpen(Gravity.LEFT)) {
+                drawerLayout.openDrawer(Gravity.LEFT) ;
+            }else{
+                drawerLayout.closeDrawer(Gravity.LEFT); ;
+            }
+        }
+        //drawer_sound.setOnCheckedChangeListener(onCheckedChangeListener)  --> null error ocurr
+        //drawer_vibrator.setOnCheckedChangeListener(onCheckedChangeListener);
     }
 
-    override fun onCurrentLocationUpdate(p0: MapView?, p1: MapPoint?, p2: Float) {
-        //
+    private val onCheckedChangeListener = CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+        when (buttonView.id) {
+            R.id.drawer_sound -> if (isChecked) {
+                Toast.makeText(applicationContext, "sound on", Toast.LENGTH_SHORT).show()
+                //soundCheck = 1
+            } else {
+                Toast.makeText(applicationContext, "sound off", Toast.LENGTH_SHORT).show()
+                //soundCheck = 0
+            }
+            R.id.drawer_vibrator -> if (isChecked) {
+                Toast.makeText(applicationContext, "vibration on", Toast.LENGTH_SHORT).show()
+                //vibratorCheck = 1
+            } else {
+                Toast.makeText(applicationContext, "vibration off", Toast.LENGTH_SHORT).show()
+                //vibratorCheck = 0
+            }
+        }
     }
 
-    override fun onCurrentLocationDeviceHeadingUpdate(p0: MapView?, p1: Float) {
-        //
+    override fun onCurrentLocationUpdate(mapView: MapView, mapPoint: MapPoint, v: Float) {
+        val mapPointGeo = mapPoint.mapPointGeoCoord
+        val latitude = mapPointGeo.latitude
+        val longitude = mapPointGeo.longitude
+        var locationInfo = LocationInfo(token, latitude, longitude,0.0)
+
+        if(isFirst && mapPointGeo!=null){
+            setLocation(currLocation, latitude, longitude)
+            queue.add(locationInfo)
+            viewModel.postLocation(locationInfo)
+            isFirst=!isFirst
+        }else{
+            prevLocation.set(currLocation)
+            setLocation(currLocation, latitude, longitude)
+
+            currentBearing = prevLocation.bearingTo(currLocation)
+            locationInfo.bearing = currentBearing.toDouble()
+            bearingTextView.text = currentBearing.toString()
+
+            if(queue.size<10){
+                queue.add(locationInfo)
+            }else{
+                queue.poll()
+                queue.add(locationInfo)
+            }
+
+            viewModel.postLocation(locationInfo)
+        }
+
+        mapViewUpdater(mapView, mapPoint)
     }
 
-    override fun onCurrentLocationUpdateFailed(p0: MapView?) {}
-
-    override fun onCurrentLocationUpdateCancelled(p0: MapView?) {}
 
 
-
-    fun RemoveToken() {/*
-        //어플이 종료시 위치를 null 혹은 없는걸로 표시하여 알림이 수신되지 않게 한다.
-        // null은 안됨! 0.0//0.0 -> 바다 한가운데!!
-        val insertLocationData = InsertLocationData(this)
-        if (token != null) {
-            insertLocationData.execute("http://" + EXTERNAL_IP_ADDRESS.toString() + "/logout.php", 0.0.toString(), 0.0.toString(), token)
-            Log.d("token:", token)
-        }*/
+    private fun removeToken() {
+        if(token != "")
+            viewModel.deleteLocation(token)
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
@@ -93,19 +173,43 @@ class MainActivity : AppCompatActivity(), MapView.CurrentLocationEventListener, 
 
         total = sqrt(accX.toDouble().pow(2.0) + accY.toDouble().pow(2.0) + accZ.toDouble().pow(2.0))
 
-        /*
-        if (total > 2.0 * 9.8 && token != null && (accidentLongitude !== latestLocation.getLongitude() || accidentLatitude !== latestLocation.getLatitude())) { //사고 위치가 바뀌고 중력가속도 기준치 이상
-            Log.d("accident", "occur")
-            accidentLatitude = latestLocation.getLatitude()
-            accidentLongitude = latestLocation.getLongitude()
-            val notifyAccident = NotifyAccident(applicationContext)
-            notifyAccident.setQueue(queue)
-            notifyAccident.execute("http://" + EXTERNAL_IP_ADDRESS.toString() + "/accident.php", java.lang.String.valueOf(accidentLatitude), java.lang.String.valueOf(accidentLongitude), "accident", token)
-        }*/
+
+        if(total>2.0*9.8 && token!="" && isLocateChanged(currLocation,prevLocation))
+            viewModel.notifyAccident(queue)
+    }
+
+    private fun setLocation(location: Location, latitude: Double, longitude: Double){
+        location.latitude = latitude
+        location.longitude = longitude
+    }
+
+
+    private fun mapViewUpdater(mapView: MapView, mapPoint: MapPoint){
+        mapView.setMapCenterPoint(mapPoint, true);
+        mapView.setCurrentLocationRadius(250); //m단위  250이란 값이 실제 지도에서 1km정도에 해당됨
+        mapView.setCurrentLocationRadiusFillColor(android.graphics.Color.argb(10, 255, 0, 0));
+        mapView.setCurrentLocationRadiusStrokeColor(android.graphics.Color.argb(100, 255, 0, 0));
+    }
+
+    private fun mapViewInit(mapView: MapView){
+        mapView.setZoomLevel(2, true);
+        mapView.zoomIn(true);
+        mapView.zoomOut(true);
+        mapView.isHDMapTileEnabled = false; //고해상도 지도 사용 안함
+        mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading;
+        mapView.setCurrentLocationEventListener(this);
+    }
+
+    private fun isLocateChanged(location1: Location, location2: Location):Boolean{
+        return location1.distanceTo(location2)>0
     }
 
     override fun onPause() {
         super.onPause()
-        RemoveToken()
+        removeToken()
     }
+
+    override fun onCurrentLocationDeviceHeadingUpdate(p0: MapView?, p1: Float) {}
+    override fun onCurrentLocationUpdateFailed(p0: MapView?) {}
+    override fun onCurrentLocationUpdateCancelled(p0: MapView?) {}
 }

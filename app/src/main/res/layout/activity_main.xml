@@ -66,15 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top|center"
             android:orientation="vertical">
-            <TextView
-                android:id="@+id/locationTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="위치"
-                android:textSize="14dp"
-                android:layout_marginTop="5dp"
-                android:fontFamily="@font/basic_font"
-                />
+
             <TextView
                 android:id="@+id/bearingTextView"
                 android:layout_width="wrap_content"
