@@ -4,19 +4,14 @@ import android.content.Context
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 
-class PermissionUtil(context: Context) {
+class PermissionUtil(context: Context, listener: PermissionListener) {
     private val context = context
-    private var listener: PermissionListener? = null
+    private var listener: PermissionListener = listener
     private val permissions = arrayOf<String>(
             android.Manifest.permission.ACCESS_FINE_LOCATION,
             android.Manifest.permission.ACCESS_COARSE_LOCATION
     )
-    init {
-        listener = object : PermissionListener {
-            override fun onPermissionGranted() {}
-            override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {}
-        }
-    }
+
 
     fun requestPermission(){
         TedPermission.with(context)
@@ -27,6 +22,6 @@ class PermissionUtil(context: Context) {
                         android.Manifest.permission.ACCESS_FINE_LOCATION,
                         android.Manifest.permission.ACCESS_COARSE_LOCATION
                 )
-                .check();
+                .check()
     }
 }

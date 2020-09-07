@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.Room
 
-@Database(entities = [Alert::class], version = 1)
+@Database(entities = [Alert::class], version = 3)
 abstract class AlertDatabase :RoomDatabase(){
     abstract fun alertDao(): AlertDao
 

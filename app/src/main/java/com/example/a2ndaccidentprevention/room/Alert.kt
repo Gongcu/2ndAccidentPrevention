@@ -6,12 +6,12 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Alert(
-    @PrimaryKey(autoGenerate = true)
-    var id: Int?,
+    @PrimaryKey
+    var id: Int,
     @ColumnInfo
-    var vibration: Int?,
+    var vibration: Boolean,
     @ColumnInfo
-    var sound:Int?
+    var sound:Boolean
 ){
-    constructor():this(null,0,0)
+    constructor():this(1,true,true)
 }

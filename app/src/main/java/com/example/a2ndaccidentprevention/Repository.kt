@@ -1,8 +1,10 @@
 package com.example.a2ndaccidentprevention
 
 import android.app.Application
+import android.location.Location
 import android.util.Log
 import androidx.lifecycle.LiveData
+import com.example.a2ndaccidentprevention.retrofit.AccidentInfo
 import com.example.a2ndaccidentprevention.retrofit.LocationInfo
 import com.example.a2ndaccidentprevention.retrofit.LocationService
 import com.example.a2ndaccidentprevention.retrofit.RetrofitAPI
@@ -18,25 +20,29 @@ class Repository(application: Application) {
     private val alertDatabase = AlertDatabase.getInstance(application.applicationContext)!!
     private val alertDao = alertDatabase.alertDao()
     private val alert : LiveData<Alert> = alertDao.get()
-    private var auth = FirebaseAuth.getInstance()
-
     private val retrofit = RetrofitAPI.getInstance()
     private val api = retrofit.create(LocationService::class.java)
 
     fun get(): LiveData<Alert> {
         return alert
     }
-    fun update(alert: Alert){
+    suspend fun update(alert: Alert){
         alertDao.update(alert)
     }
-    fun insert(alert: Alert){
+    suspend fun updateVibration(status: Boolean){
+        alertDao.updateVibration(status)
+    }
+    suspend fun updateSound(status: Boolean){
+        alertDao.updateSound(status)
+    }
+    suspend fun insert(alert: Alert){
         alertDao.insert(alert)
     }
     fun postLocation(locationInfo: LocationInfo){
         api.postLocation(locationInfo)
     }
-    fun notifyAccident(locationInfoList: Queue<LocationInfo>){
-        api.notifyAccident(locationInfoList).enqueue(object: Callback<Void>{
+    fun notifyAccident(accidentLocation: LocationInfo, locationInfoList: Queue<LocationInfo>){
+        api.notifyAccident(accidentInfo = AccidentInfo(accidentLocation,locationInfoList)).enqueue(object: Callback<Void>{
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 Log.d("onResponse",response.toString())
             }
@@ -48,10 +54,5 @@ class Repository(application: Application) {
     fun deleteLocation(token: String){
         api.deleteLocation(token)
     }
-    fun getAuth():FirebaseAuth{bg
-        return auth
-    }
-    fun getUid():String?{
-        return auth.currentUser?.uid.toString()
-    }
+
 }
