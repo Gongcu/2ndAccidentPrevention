@@ -39,7 +39,14 @@ class Repository(application: Application) {
         alertDao.insert(alert)
     }
     fun postLocation(locationInfo: LocationInfo){
-        api.postLocation(locationInfo)
+        api.postLocation(locationInfo).enqueue(object: Callback<Void>{
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                Log.d("post:onResponse",response.toString())
+            }
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Log.e("post:onFailure",t.toString())
+            }
+        });
     }
     fun notifyAccident(accidentLocation: LocationInfo, locationInfoList: Queue<LocationInfo>){
         api.notifyAccident(accidentInfo = AccidentInfo(accidentLocation,locationInfoList)).enqueue(object: Callback<Void>{
@@ -54,5 +61,4 @@ class Repository(application: Application) {
     fun deleteLocation(token: String){
         api.deleteLocation(token)
     }
-
 }

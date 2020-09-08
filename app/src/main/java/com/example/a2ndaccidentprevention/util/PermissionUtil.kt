@@ -12,7 +12,6 @@ class PermissionUtil(context: Context, listener: PermissionListener) {
             android.Manifest.permission.ACCESS_COARSE_LOCATION
     )
 
-
     fun requestPermission(){
         TedPermission.with(context)
                 .setPermissionListener(listener)

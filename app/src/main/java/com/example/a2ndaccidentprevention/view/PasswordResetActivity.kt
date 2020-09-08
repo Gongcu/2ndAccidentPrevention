@@ -1,8 +1,9 @@
-package com.example.a2ndaccidentprevention
+package com.example.a2ndaccidentprevention.view
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.a2ndaccidentprevention.R
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.emailEditText
 import kotlinx.android.synthetic.main.activity_password_reset.*

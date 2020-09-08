@@ -11,17 +11,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data android:name="com.kakao.sdk.AppKey" android:value="@string/kakao_api_key"/>
-        <activity android:name=".PasswordResetActivity"></activity>
-        <activity android:name=".SplashActivity" android:noHistory="true">
+        <activity android:name=".view.PasswordResetActivity"></activity>
+        <activity android:name=".view.SplashActivity" android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignupActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".view.SignupActivity" />
+        <activity android:name=".view.LoginActivity" />
+        <activity android:name=".view.MainActivity" />
         <service
             android:name=".util.MyFirebaseMessagingService"
             android:exported="false">

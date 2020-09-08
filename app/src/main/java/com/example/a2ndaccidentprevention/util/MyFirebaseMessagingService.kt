@@ -1,27 +1,38 @@
 package com.example.a2ndaccidentprevention.util
 
+import android.annotation.SuppressLint
+import android.app.ActivityManager
+import android.app.ActivityManager.RunningAppProcessInfo
+import android.content.Context
+import android.content.Intent
 import android.util.Log
+import com.beust.klaxon.Klaxon
+import com.example.a2ndaccidentprevention.retrofit.LocationInfo
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class MyFirebaseMessagingService : FirebaseMessagingService(){
-    private val TAG:String = "MyFirebaseMessagingService"
-
+    @SuppressLint("LongLogTag")
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        // [START_EXCLUDE]
-        // There are two types of messages data messages and notification messages. Data messages are handled
-        // here in onMessageReceived whether the app is in the foreground or background. Data messages are the type
-        // traditionally used with GCM. Notification messages are only received here in onMessageReceived when the app
-        // is in the foreground. When the app is in the background an automatically generated notification is displayed.
-        // When the user taps on the notification they are returned to the app. Messages containing both notification
-        // and data payloads are treated as notification messages. The Firebase console always sends notification
-        // messages. For more see: https://firebase.google.com/docs/cloud-messaging/concept-options
-        // [END_EXCLUDE]
-
         Log.d(TAG, "From: ${remoteMessage.from}")
         if (remoteMessage.data.isNotEmpty()) {
             Log.d(TAG, "Message data payload: ${remoteMessage.data}")
+            val accidentLatitude = remoteMessage.data["latitude"]!!.toDouble()
+            val accidentLongitude = remoteMessage.data["longitude"]!!.toDouble()
+            val locationInfoList = remoteMessage.data["accidentInfo"]
+            val list = Collections.unmodifiableList(Klaxon().parseArray<LocationInfo>(locationInfoList.toString()))
 
+            if(applicationInForeground()){
+                Log.d(TAG,"send to receiver")
+                val intent = Intent("accident")
+                intent.putExtra("accidentLatitude",accidentLatitude)
+                intent.putExtra("accidentLongitude",accidentLongitude)
+                intent.putExtra("list",ArrayList(list))
+                this.sendBroadcast(intent)
+            }
         }
 
         // Check if message contains a notification payload.
@@ -29,29 +40,33 @@ class MyFirebaseMessagingService : FirebaseMessagingService(){
             Log.d(TAG, "Message Notification Body: ${it.body}")
         }
 
-        // Also if you intend on generating your own notifications as a result of a received FCM
-        // message, here is where that should be initiated. See sendNotification method below.
     }
-    // [END receive_message]
 
-    // [START on_new_token]
-    /**
-     * Called if InstanceID token is updated. This may occur if the security of
-     * the previous token had been compromised. Note that this is called when the InstanceID token
-     * is initially generated so this is where you would retrieve the token.
-     */
+    @SuppressLint("LongLogTag")
     override fun onNewToken(token: String) {
         Log.d(TAG, "Refreshed token: $token")
-        // If you want to send messages to this application instance or
-        // manage this apps subscriptions on the server side, send the
-        // Instance ID token to your app server.
         sendRegistrationToServer(token)
     }
     // [END on_new_token]
 
+    @SuppressLint("LongLogTag")
     private fun sendRegistrationToServer(token: String?) {
-        // TODO: Implement this method to send token to your app server.
         Log.d(TAG, "sendRegistrationTokenToServer($token)")
     }
 
+    private fun applicationInForeground(): Boolean {
+        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val services = activityManager.runningAppProcesses
+        var isActivityFound = false
+        if (services[0].processName
+                        .equals(packageName, ignoreCase = true) && services[0].importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+            isActivityFound = true
+        }
+        return isActivityFound
+    }
+
+    companion object{
+        private const val TAG:String = "MyFirebaseMessagingService"
+    }
 }
+

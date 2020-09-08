@@ -69,4 +69,6 @@ dependencies {
 
     implementation 'gun0912.ted:tedpermission:2.2.3'
     implementation 'com.muddzdev:styleabletoast:2.2.3'
+
+    implementation 'com.beust:klaxon:5.0.1'
 }

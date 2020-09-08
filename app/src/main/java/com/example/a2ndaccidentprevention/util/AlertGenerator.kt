@@ -1,4 +1,5 @@
 package com.example.a2ndaccidentprevention.util
+import android.app.Application
 import android.content.Context
 import android.location.Location
 import android.media.AudioManager
@@ -9,6 +10,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import com.example.a2ndaccidentprevention.R
+import com.example.a2ndaccidentprevention.ViewModel
 import com.example.a2ndaccidentprevention.retrofit.LocationInfo
 import com.muddzdev.styleabletoast.StyleableToast
 import net.daum.mf.map.api.MapPOIItem
@@ -16,39 +18,38 @@ import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 
 
-class AlertGenerator(private val context: Context, private val latestLocation:Location, private val currentBearing: Float){
+object AlertGenerator{
 
-    fun isAccident(items: ArrayList<LocationInfo>): Boolean {
+    fun isAccident(currentBearing: Float,accidentLocation:Location,items:List<LocationInfo>): Boolean {
         var minBearing = 360.0f
         var maxBearing = 0.0f
-
         //get Min, Max Bearing
-        for (i in 0 until items.size) {
+        for (i in items.indices) {
             if (minBearing > items[i].bearing && items[i].bearing != 0.0f) minBearing = items[i].bearing
             if (maxBearing < items[i].bearing && items[i].bearing != 0.0f) maxBearing = items[i].bearing
+
+            //below code is test code when device is stop state
+            //if (minBearing > items[i].bearing ) minBearing = items[i].bearing
+            //if (maxBearing < items[i].bearing ) maxBearing = items[i].bearing
         }
 
 
-        for (i in 0 until items.size) {
+        for (i in items.indices) {
             //사고 발생 가능성 차량의 행적
             val trackingLocation = Location(i.toString())
             trackingLocation.longitude=items[i].longitude
             trackingLocation.latitude=items[i].latitude
-            val distance: Float = latestLocation.distanceTo(trackingLocation)
+            val distance: Float = accidentLocation.distanceTo(trackingLocation)
             if (distance < 135.0 && currentBearing >= minBearing && currentBearing <= maxBearing) {
                 return true
             } else {
-                Log.e("currentBearing", currentBearing.toString() + "")
-                Log.e("latestLocation", latestLocation.latitude.toString() + "," + latestLocation.longitude + "")
-                Log.e("subcircle", trackingLocation.latitude.toString() + "," + trackingLocation.longitude + "")
-                Log.e("distance", latestLocation.distanceTo(trackingLocation).toString() + "")
                 continue
             }
         }
         return false
     }
 
-    fun showMarker(mapPoint:MapPoint, mapView: MapView){
+    fun showMarker(context:Context,mapPoint:MapPoint, mapView: MapView){
         val customMarker = MapPOIItem()
         customMarker.itemName = "급감속 발생 위치"
         customMarker.tag = 1
@@ -63,7 +64,7 @@ class AlertGenerator(private val context: Context, private val latestLocation:Lo
         mapView.addPOIItem(customMarker)
     }
 
-    fun generateSound(){
+    fun generateSound(context:Context){
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val mediaPlayer: MediaPlayer = MediaPlayer.create(context, R.raw.alert)
         val currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
@@ -72,7 +73,8 @@ class AlertGenerator(private val context: Context, private val latestLocation:Lo
         mediaPlayer.start()
         Handler(Looper.getMainLooper()).postDelayed(Runnable { audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, AudioManager.FLAG_PLAY_SOUND) }, 4000)
     }
-    fun generateVibration(){
+
+    fun generateVibration(context:Context){
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val mediaPlayer: MediaPlayer = MediaPlayer.create(context, R.raw.alert)
         val currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)

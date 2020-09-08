@@ -3,30 +3,32 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".MainActivity"
+    tools:context=".view.MainActivity"
     >
     <data>
         <variable
             name="viewmodel"
             type="com.example.a2ndaccidentprevention.ViewModel" />
+        <variable
+            name="activity"
+            type="com.example.a2ndaccidentprevention.view.MainActivity" />
     </data>
     <androidx.drawerlayout.widget.DrawerLayout
         android:id ="@+id/drawerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        >
+        android:fitsSystemWindows="true">
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-
             <net.daum.mf.map.api.MapView
                 android:id="@+id/map_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:mapViewInit="@{viewmodel.mapPoint}"
                 />
 
             <FrameLayout
@@ -34,54 +36,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 >
-                <TextView
-                    android:id="@+id/locationServiceStatus"
-                    android:textSize="8dp"
-                    android:text="위치 정보 작동 중"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <ImageView
-                    android:src="@drawable/ic_settings_black_24dp"
+                <Button
+                    android:background="@drawable/ic_settings_black_24dp"
                     android:layout_marginEnd="5dp"
                     android:layout_gravity="right|center_vertical"
                     android:fontFamily="@font/basic_font"
                     android:id="@+id/settingBtn"
+                    android:onClick="@{()->activity.settingBtnClicked()}"
                     android:layout_width="36dp"
                     android:layout_height="36dp" />
             </FrameLayout>
 
-
-            <TextView
-                android:id="@+id/speedTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|left"
-                android:layout_marginStart="8dp"
-                android:layout_marginVertical="8dp"
-                android:fontFamily="@font/basic_font"
-                android:text="0.0"
-                android:textSize="32dp"
-                android:textColor="@color/black"
-                android:textStyle="bold" />
-
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/bearingTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="각도"
-                    android:textSize="14dp"
-                    android:layout_marginTop="5dp"
-                    android:fontFamily="@font/basic_font"
-                    />
-            </LinearLayout>
 
         </FrameLayout>
         <com.google.android.material.navigation.NavigationView

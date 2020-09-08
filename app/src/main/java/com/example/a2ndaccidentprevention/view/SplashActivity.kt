@@ -1,14 +1,12 @@
-package com.example.a2ndaccidentprevention
+package com.example.a2ndaccidentprevention.view
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
-import android.util.Base64
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.example.a2ndaccidentprevention.R
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth

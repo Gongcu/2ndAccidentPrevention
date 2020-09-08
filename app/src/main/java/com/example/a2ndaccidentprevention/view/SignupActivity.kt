@@ -1,12 +1,11 @@
-package com.example.a2ndaccidentprevention
+package com.example.a2ndaccidentprevention.view
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.AuthResult
+import com.example.a2ndaccidentprevention.R
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_signup.*
 
 
