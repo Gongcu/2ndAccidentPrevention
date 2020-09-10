@@ -24,6 +24,7 @@ import com.example.a2ndaccidentprevention.view.MainActivity.GLOBAL.token
 import com.example.a2ndaccidentprevention.databinding.ActivityMainBinding
 import com.example.a2ndaccidentprevention.retrofit.LocationInfo
 import com.example.a2ndaccidentprevention.room.Alert
+import com.example.a2ndaccidentprevention.util.AccidentReceiver
 import com.example.a2ndaccidentprevention.util.AlertGenerator
 import com.example.a2ndaccidentprevention.util.MyFirebaseMessagingService
 import com.example.a2ndaccidentprevention.util.PermissionUtil
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var sensorManager : SensorManager
     private lateinit var accelerometer : Sensor
-
+    private lateinit var accidentReceiver : AccidentReceiver
     private lateinit var permissionUtil: PermissionUtil
 
     private var accident = false
@@ -61,6 +62,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         binding.viewmodel = viewModel
         binding.activity = this
         binding.lifecycleOwner = this
+
+        accidentReceiver = AccidentReceiver(viewModel,applicationContext,map_view)
 
         permissionUtil= PermissionUtil(applicationContext, object:PermissionListener{
             override fun onPermissionGranted() {
@@ -169,36 +172,17 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             drawerLayout.closeDrawer(Gravity.LEFT);
         }
     }
-    private val myReceiver: BroadcastReceiver = object:BroadcastReceiver(){
-        override fun onReceive(context: Context?, intent: Intent?) {
-            if(intent!=null){
-                val accidentLatitude = intent.getDoubleExtra("accidentLatitude",0.0)
-                val accidentLongitude = intent.getDoubleExtra("accidentLongitude",0.0)
-                val list = intent.getSerializableExtra("list") as ArrayList<LocationInfo>
-                val accidentLocation = Location("accidentLocation")
-                accidentLocation.latitude=accidentLatitude
-                accidentLocation.longitude=accidentLongitude
-                if(AlertGenerator.isAccident(viewModel.getBearing(),accidentLocation,list)){
-                    Log.d("MainActivity","Accident occur")
-                    AlertGenerator.showMarker(applicationContext, viewModel.mapPoint.value!!, map_view )
-                    AlertGenerator.generateSound(applicationContext)
-                    AlertGenerator.generateVibration(applicationContext)
-                }
-            }
-        }
-    }
-
 
     override fun onResume() {
         super.onResume()
-        registerReceiver(myReceiver, IntentFilter ("accident"));
+        registerReceiver(accidentReceiver, IntentFilter ("accident"));
     }
 
     override fun onPause() {
         super.onPause()
         removeToken()
         accident = false
-        unregisterReceiver(myReceiver)
+        unregisterReceiver(accidentReceiver)
     }
 
     private fun removeToken() {
