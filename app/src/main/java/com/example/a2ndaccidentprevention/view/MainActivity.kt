@@ -146,16 +146,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         total = sqrt(acceleration[0].toDouble().pow(2.0) + acceleration[1].toDouble().pow(2.0) + acceleration[2].toDouble().pow(2.0))
 
-        //&& isLocateChanged(currLocation,prevLocation)
-        if(total>2.0*9.8 && token.isNotEmpty() && !accident) {
+        //
+        if(total>2.0*9.8 && token.isNotEmpty() && !accident ) {
             ioScope.launch {
                 viewModel.notifyAccident()
                 accident=true
             }
         }
-    }
-    private fun isLocateChanged(location1: Location, location2: Location):Boolean{
-        return location1.distanceTo(location2)>0
     }
 
 

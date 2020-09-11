@@ -51,12 +51,16 @@ class ViewModel(application: Application) : AndroidViewModel(application),MapVie
         repository.postLocation(locationInfo)
     }
     fun notifyAccident(){
-        repository.notifyAccident(LocationInfo(MainActivity.GLOBAL.token,currLocation.latitude,currLocation.longitude,currentBearing),queue)
+        if(isLocateChanged(currLocation,prevLocation))
+            repository.notifyAccident(LocationInfo(MainActivity.GLOBAL.token,currLocation.latitude,currLocation.longitude,currentBearing),queue)
     }
     fun deleteLocation(token: String){
         repository.deleteLocation(token)
     }
 
+    private fun isLocateChanged(location1: Location, location2: Location):Boolean{
+        return location1.distanceTo(location2)>0
+    }
 
     override fun onCurrentLocationUpdate(mapView: MapView, mapPoint: MapPoint, v: Float) {
         this.mapPoint.value=mapPoint
