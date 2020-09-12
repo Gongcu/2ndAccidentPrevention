@@ -28,7 +28,6 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 class ViewModel(application: Application) : AndroidViewModel(application),MapView.CurrentLocationEventListener {
-    val acceleratorLiveData = AcceleratorLiveData()
     private var isFirst = true
     private var queue :Queue<LocationInfo> = LinkedList()
     private val currLocation = Location("currLocation")
@@ -61,7 +60,7 @@ class ViewModel(application: Application) : AndroidViewModel(application),MapVie
         repository.postLocation(locationInfo)
     }
     fun notifyAccident(){
-        if(isLocateChanged(currLocation,prevLocation))
+        //if(isLocateChanged(currLocation,prevLocation))
             repository.notifyAccident(LocationInfo(MainActivity.GLOBAL.token,currLocation.latitude,currLocation.longitude,currentBearing),queue)
     }
     fun deleteLocation(token: String){
@@ -119,54 +118,4 @@ class ViewModel(application: Application) : AndroidViewModel(application),MapVie
     override fun onCurrentLocationDeviceHeadingUpdate(p0: MapView?, p1: Float) {}
     override fun onCurrentLocationUpdateFailed(p0: MapView?) {}
     override fun onCurrentLocationUpdateCancelled(p0: MapView?) {}
-
-
-    //변화를 감지하기 위한 LiveData<?> 상속 observing 할 시 ?에 선언한 타입을 반환한다.
-    inner class AcceleratorLiveData: LiveData<Any>(), SensorEventListener{
-        private val sensorManager:SensorManager
-            get()=getApplication<Application>().getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        private var accident = false
-
-        override fun onSensorChanged(event: SensorEvent) {
-            val alpha = 0.8f
-            val gravity = FloatArray(3)
-            val acceleration = FloatArray(3)
-            var total:Double = 0.0
-
-            gravity[0] = alpha * gravity[0] + (1 - alpha) * event.values[0]
-            gravity[1] = alpha * gravity[1] + (1 - alpha) * event.values[1]
-            gravity[2] = alpha * gravity[2] + (1 - alpha) * event.values[2] //중력가속도 계산
-
-            acceleration[0]= event.values[0] - gravity[0]
-            acceleration[1]= event.values[1] - gravity[1]
-            acceleration[2]= event.values[2] - gravity[2] // 중력을 뺀 가속도.
-
-            total = sqrt(acceleration[0].toDouble().pow(2.0) + acceleration[1].toDouble().pow(2.0) + acceleration[2].toDouble().pow(2.0))
-
-            if(total>2.0*9.8 && MainActivity.GLOBAL.token.isNotEmpty() && !accident ) {
-                ioScope.launch {
-                    notifyAccident()
-                    accident=true
-                }
-            }
-        }
-
-        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
-
-        //Observer 상태가 start, resume 시에 호출된다.
-        override fun onActive() {
-            super.onActive()
-            sensorManager.let { sm ->
-                sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER).let{
-                    sm.registerListener(this,it,SensorManager.SENSOR_DELAY_NORMAL)
-                }
-            }
-        }
-        //Observer 상태가 stop, pause 시에 호출된다.
-        override fun onInactive() {
-            super.onInactive()
-            sensorManager.unregisterListener(this)
-            Log.d("accelerator sensor","workFinished")
-        }
-    }
 }

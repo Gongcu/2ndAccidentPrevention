@@ -15,12 +15,12 @@
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
             <Button
                 android:id="@+id/settingBtn"
@@ -28,30 +28,28 @@
                 android:layout_height="36dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
+                android:layout_gravity="end"
                 android:background="@drawable/ic_settings_black_24dp"
-                android:fontFamily="@font/basic_font"
-                android:onClick="@{()->activity.settingBtnClicked()}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
+                android:onClick="@{()->activity.settingBtnClicked()}" />
+            <!--https://stackoverflow.com/questions/19314383/android-mapview-overlaps-drawerlayout -->
             <net.daum.mf.map.api.MapView
                 android:id="@+id/map_view"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 app:mapViewUpdate="@{viewmodel.mapPoint}" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </FrameLayout>
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/navigationView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="start"
+            android:layout_gravity="end"
             app:headerLayout="@layout/main_navi_header"
             app:menu="@menu/main_navigation_menu" />
     </androidx.drawerlayout.widget.DrawerLayout>

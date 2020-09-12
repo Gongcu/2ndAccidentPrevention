@@ -19,10 +19,17 @@ class AccidentReceiver(private val viewModel: ViewModel, private val activityCon
             accidentLocation.latitude=accidentLatitude
             accidentLocation.longitude=accidentLongitude
             if(AlertGenerator.isAccident(viewModel.getBearing(),accidentLocation,list)){
-                Log.d("MainActivity","Accident occur")
+                Log.d("AccidentReceiver","Accident occur")
+                val alert = viewModel.get().value
+                if(alert!=null){
+                    if(alert.sound)
+                        AlertGenerator.generateSound(activityContext)
+                    if(alert.vibration)
+                        AlertGenerator.generateVibration(activityContext)
+                }
                 AlertGenerator.showMarker(activityContext, viewModel.mapPoint.value!!, mapView )
-                AlertGenerator.generateSound(activityContext)
-                AlertGenerator.generateVibration(activityContext)
+            }else{
+                Log.d("AccidentReceiver","this is not accident")
             }
         }
     }
