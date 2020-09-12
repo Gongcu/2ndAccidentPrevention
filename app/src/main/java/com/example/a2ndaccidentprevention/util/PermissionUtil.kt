@@ -4,13 +4,7 @@ import android.content.Context
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
 
-class PermissionUtil(context: Context, listener: PermissionListener) {
-    private val context = context
-    private var listener: PermissionListener = listener
-    private val permissions = arrayOf<String>(
-            android.Manifest.permission.ACCESS_FINE_LOCATION,
-            android.Manifest.permission.ACCESS_COARSE_LOCATION
-    )
+class PermissionUtil(private val context: Context, private val listener: PermissionListener) {
 
     fun requestPermission(){
         TedPermission.with(context)

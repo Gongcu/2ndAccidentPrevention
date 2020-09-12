@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".view.MainActivity"
-    >
+    tools:context=".view.MainActivity">
     <data>
         <variable
             name="viewmodel"
@@ -13,49 +11,48 @@
             name="activity"
             type="com.example.a2ndaccidentprevention.view.MainActivity" />
     </data>
-    <androidx.drawerlayout.widget.DrawerLayout
-        android:id ="@+id/drawerLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
 
-        <FrameLayout
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <Button
+                android:id="@+id/settingBtn"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/ic_settings_black_24dp"
+                android:fontFamily="@font/basic_font"
+                android:onClick="@{()->activity.settingBtnClicked()}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <net.daum.mf.map.api.MapView
                 android:id="@+id/map_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:mapViewInit="@{viewmodel.mapPoint}"
-                />
-
-            <FrameLayout
-                android:layout_marginTop="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
-                <Button
-                    android:background="@drawable/ic_settings_black_24dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_gravity="right|center_vertical"
-                    android:fontFamily="@font/basic_font"
-                    android:id="@+id/settingBtn"
-                    android:onClick="@{()->activity.settingBtnClicked()}"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp" />
-            </FrameLayout>
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:mapViewUpdate="@{viewmodel.mapPoint}" />
 
 
-        </FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/navigationView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             app:headerLayout="@layout/main_navi_header"
-            app:menu="@menu/main_navigation_menu"
-            />
+            app:menu="@menu/main_navigation_menu" />
     </androidx.drawerlayout.widget.DrawerLayout>
 </layout>
