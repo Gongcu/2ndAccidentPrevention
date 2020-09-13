@@ -32,5 +32,10 @@
 <img src=https://user-images.githubusercontent.com/30337408/93011097-3507e780-f5ce-11ea-8849-b00dde988144.png width=20% height=20%>
 
 # License
-무단 복제 및 사용을 금합니다.
+                    GNU GENERAL PUBLIC LICENSE
+                       Version 3, 29 June 2007
+
+ Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
 
