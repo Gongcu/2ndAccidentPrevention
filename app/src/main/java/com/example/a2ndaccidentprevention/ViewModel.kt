@@ -1,31 +1,20 @@
 package com.example.a2ndaccidentprevention
 
 import android.app.Application
-import android.content.Context
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
 import android.location.Location
-import android.util.Log
-import android.view.Gravity
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.a2ndaccidentprevention.retrofit.LocationInfo
 import com.example.a2ndaccidentprevention.room.Alert
 import com.example.a2ndaccidentprevention.view.MainActivity
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 import java.util.*
-import kotlin.math.pow
-import kotlin.math.sqrt
+
 
 class ViewModel(application: Application) : AndroidViewModel(application),MapView.CurrentLocationEventListener {
     private var isFirst = true
@@ -60,7 +49,7 @@ class ViewModel(application: Application) : AndroidViewModel(application),MapVie
         repository.postLocation(locationInfo)
     }
     fun notifyAccident(){
-        //if(isLocateChanged(currLocation,prevLocation))
+        if(isLocateChanged(currLocation,prevLocation))
             repository.notifyAccident(LocationInfo(MainActivity.GLOBAL.token,currLocation.latitude,currLocation.longitude,currentBearing),queue)
     }
     fun deleteLocation(token: String){

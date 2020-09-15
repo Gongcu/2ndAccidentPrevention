@@ -27,7 +27,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService(){
 
             if(applicationInForeground()){
                 Log.d(TAG,"send to receiver")
-                val intent = Intent("accident")
+                val intent = Intent(AccidentReceiver.ACCIDENT)
                 intent.putExtra("accidentLatitude",accidentLatitude)
                 intent.putExtra("accidentLongitude",accidentLongitude)
                 intent.putExtra("list",ArrayList(list))

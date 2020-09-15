@@ -11,7 +11,7 @@ import net.daum.mf.map.api.MapView
 
 class AccidentReceiver(private val viewModel: ViewModel, private val activityContext: Context, private val mapView: MapView) :BroadcastReceiver(){
     override fun onReceive(context: Context?, intent: Intent?) {
-        if(intent!=null){ //filtering when receiver registered
+        if(intent!=null && intent.action==ACCIDENT){ //filtering when receiver registered
             val accidentLatitude = intent.getDoubleExtra("accidentLatitude",0.0)
             val accidentLongitude = intent.getDoubleExtra("accidentLongitude",0.0)
             val list = intent.getSerializableExtra("list") as ArrayList<LocationInfo>
@@ -32,5 +32,9 @@ class AccidentReceiver(private val viewModel: ViewModel, private val activityCon
                 Log.d("AccidentReceiver","this is not accident")
             }
         }
+    }
+
+    companion object{
+        const val ACCIDENT="ACCIDENT"
     }
 }
