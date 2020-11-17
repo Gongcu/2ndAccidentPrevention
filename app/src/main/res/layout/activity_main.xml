@@ -6,10 +6,10 @@
     <data>
         <variable
             name="viewmodel"
-            type="com.example.a2ndaccidentprevention.ViewModel" />
+            type="com.sbs.a2ndaccidentprevention.ViewModel" />
         <variable
             name="activity"
-            type="com.example.a2ndaccidentprevention.view.MainActivity" />
+            type="com.sbs.a2ndaccidentprevention.view.MainActivity" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -38,6 +38,19 @@
                 android:layout_height="match_parent"
                 app:mapViewUpdate="@{viewmodel.mapPoint}" />
 
+            <TextView
+                android:id="@+id/speed_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.0"
+                android:textStyle="bold"
+                android:textSize="36dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/basic_font"
+                android:layout_gravity="bottom|start">
+
+            </TextView>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

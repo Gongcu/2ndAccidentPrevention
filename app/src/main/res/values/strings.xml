@@ -10,4 +10,5 @@
     <string name="signup_null_failed">이메일 혹은 비밀번호를 확인해주세요.</string>
     <string name="password_email_send">메일을 전송했습니다.</string>
     <string name="password_email_failed">메일을 다시 확인해주세요.</string>
+    <string name="facebook_app_id">745290159407876</string> <string name="fb_login_protocol_scheme">fb745290159407876</string>
 </resources>
