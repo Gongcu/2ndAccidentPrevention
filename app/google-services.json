@@ -52,11 +52,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "633214932608-kir75s73ksa2vbr9n1armo3dcqplasog.apps.googleusercontent.com",
+          "client_id": "633214932608-0rniif4j0v2e7sjmn057goqvfg2lsq8p.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.sbs.a2ndaccidentprevention",
             "certificate_hash": "9e175c5bce71b4b11b7761d31095b4a7567d67b2"
+          }
+        },
+        {
+          "client_id": "633214932608-p085b3dtu1bofs1bekeufaplu4gap3oa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sbs.a2ndaccidentprevention",
+            "certificate_hash": "8daebb189e85ad1d9a6861c53946464a6b8a8155"
           }
         },
         {
