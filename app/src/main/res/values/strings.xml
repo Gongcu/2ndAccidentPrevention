@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">2ndAccidentPrevention</string>
+    <string name="app_name">2차 사고 방지 애플리케이션</string>
     <string name="kakao_api_key">89884502423f09c300bf5f7951fdfe18</string>
     <string name="permission_failed">권한을 승인해야 앱을 사용할 수 있습니다.</string>
     <string name="login_failed">로그인에 실패했습니다.</string>
